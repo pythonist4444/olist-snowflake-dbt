@@ -24,10 +24,11 @@ dbt_packages/
 logs/
 
 # =========================
-# Credentials / Secrets
+# dbt Credentials / Secrets
 # =========================
 secrets.yml
 credentials.yml
+profiles.yml
 
 # =========================
 # IDEs & Editors
