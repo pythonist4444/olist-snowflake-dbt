@@ -2,4 +2,6 @@
 *
 
 # Keep this file
+*
 !.gitignore
+!.gitkeep
