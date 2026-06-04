@@ -14,10 +14,8 @@ clean-targets: ["target", "dbt_packages"]
 models:
   olist_snowflake_dbt:
     staging:
-      +schema: STAGING
       +materialized: view
     intermediate:
-      +schema: STAGING
       +materialized: view
     marts:
       +schema: MARTS

@@ -5,7 +5,6 @@ sources:
     database: OLIST_DB
     schema: RAW
     description: "Raw Olist e-commerce data loaded from CSV files"
-
     tables:
       - name: orders
         description: "One row per order — 99,441 orders"
@@ -25,3 +24,142 @@ sources:
         description: "Brazilian postcode lat/lng lookup"
       - name: product_category_name_translation
         description: "Portuguese to English category name translations"
+
+models:
+  - name: stg_orders
+    description: "One row per order with cleaned timestamps and status"
+    columns:
+      - name: order_id
+        description: "Primary key"
+        data_tests:
+          - not_null
+          - unique
+      - name: customer_id
+        data_tests:
+          - not_null
+      - name: order_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - delivered
+                  - shipped
+                  - canceled
+                  - unavailable
+                  - invoiced
+                  - processing
+                  - created
+                  - approved
+
+  - name: stg_order_items
+    description: "One row per item within an order"
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+      - name: order_item_id
+        data_tests:
+          - not_null
+      - name: product_id
+        data_tests:
+          - not_null
+      - name: seller_id
+        data_tests:
+          - not_null
+      - name: price
+        data_tests:
+          - not_null
+
+  - name: stg_order_payments
+    description: "Payment methods and values per order"
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+      - name: payment_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - credit_card
+                  - boleto
+                  - voucher
+                  - debit_card
+                  - not_defined
+      - name: payment_value
+        data_tests:
+          - not_null
+
+  - name: stg_order_reviews
+    description: "Customer review scores and comments"
+    columns:
+      - name: review_id
+        data_tests:
+          - not_null
+      - name: order_id
+        data_tests:
+          - not_null
+      - name: review_score
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - 1
+                  - 2
+                  - 3
+                  - 4
+                  - 5
+
+  - name: stg_customers
+    description: "Customer location and unique IDs"
+    columns:
+      - name: customer_id
+        data_tests:
+          - not_null
+          - unique
+      - name: customer_unique_id
+        data_tests:
+          - not_null
+      - name: customer_state
+        data_tests:
+          - not_null
+
+  - name: stg_sellers
+    description: "Seller location and unique IDs"
+    columns:
+      - name: seller_id
+        data_tests:
+          - not_null
+          - unique
+      - name: seller_state
+        data_tests:
+          - not_null
+
+  - name: stg_products
+    description: "Product attributes with corrected column names"
+    columns:
+      - name: product_id
+        data_tests:
+          - not_null
+          - unique
+
+  - name: stg_product_category_name_translation
+    description: "Portuguese to English category name translations"
+    columns:
+      - name: product_category_name_pt
+        data_tests:
+          - not_null
+          - unique
+      - name: product_category_name_en
+        data_tests:
+          - not_null
+
+  - name: stg_geolocation
+    description: "Brazilian postcode lat/lng lookup"
+    columns:
+      - name: zip_code
+        data_tests:
+          - not_null
