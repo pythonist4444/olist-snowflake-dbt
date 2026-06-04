@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: int_order_items_enriched
+    description: "Order items joined with product details, category translations and seller info"
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+      - name: order_item_id
+        data_tests:
+          - not_null
+      - name: product_id
+        data_tests:
+          - not_null
+      - name: price
+        data_tests:
+          - not_null
+
+  - name: int_orders_with_payments
+    description: "Orders joined with aggregated payments, reviews and delivery metrics"
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+          - unique
+      - name: customer_id
+        data_tests:
+          - not_null
+      - name: total_payment_value
+        data_tests:
+          - not_null
