@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: olist_raw
+    database: OLIST_DB
+    schema: RAW
+    description: "Raw Olist e-commerce data loaded from CSV files"
+
+    tables:
+      - name: orders
+        description: "One row per order — 99,441 orders"
+      - name: order_items
+        description: "One row per item within an order — 112,650 rows"
+      - name: order_payments
+        description: "Payment methods and values per order"
+      - name: order_reviews
+        description: "Customer review scores and comments"
+      - name: customers
+        description: "Customer location and unique IDs"
+      - name: sellers
+        description: "Seller location and unique IDs"
+      - name: products
+        description: "Product attributes and category names (Portuguese)"
+      - name: geolocation
+        description: "Brazilian postcode lat/lng lookup"
+      - name: product_category_name_translation
+        description: "Portuguese to English category name translations"
