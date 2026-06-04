@@ -1,0 +1,57 @@
+{
+  "data_asset_type": null,
+  "expectation_suite_name": "olist_raw_orders",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 90000,
+        "max_value": 110000
+      },
+      "meta": { "notes": "Olist orders table should have ~99k rows" }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": { "column": "ORDER_ID" }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": { "column": "CUSTOMER_ID" }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": { "column": "ORDER_ID" }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": { "column": "CUSTOMER_ID" }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_unique",
+      "kwargs": { "column": "ORDER_ID" }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "ORDER_STATUS",
+        "value_set": [
+          "delivered",
+          "shipped",
+          "canceled",
+          "unavailable",
+          "invoiced",
+          "processing",
+          "created",
+          "approved"
+        ]
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": { "column": "ORDER_PURCHASE_TIMESTAMP" }
+    }
+  ],
+  "meta": {
+    "great_expectations_version": "0.18.12"
+  }
+}
