@@ -46,10 +46,10 @@ jobs:
         working-directory: dbt_olist
         run: dbt deps
 
-      - name: dbt compile and generate catalog
+      - name: dbt docs generate
         working-directory: dbt_olist
-        run: dbt compile --write-catalog
-
+        run: dbt docs generate
+        
       - name: Move docs to gh-pages folder
         run: |
           mkdir -p gh-pages
