@@ -56,13 +56,15 @@ models:
           - unique
 
   - name: fct_orders
-    description: "One row per order — grain is order_id"
+    description: "One row per order. Grain is order_id. Joins orders with payments, delivery metrics, customer location and order item totals."
     columns:
       - name: order_id
+        description: "Primary Key"
         data_tests:
           - not_null
           - unique
       - name: customer_id
+        description: "Foreign key to dim_customers"
         data_tests:
           - not_null
           - relationships:
@@ -70,6 +72,7 @@ models:
                 to: ref('dim_customers')
                 field: customer_id
       - name: order_status
+        description: "Final status of the order"
         data_tests:
           - not_null
           - accepted_values:
@@ -84,6 +87,7 @@ models:
                   - created
                   - approved
       - name: delivery_status
+        description: "status of the order delivery"
         data_tests:
           - accepted_values:
               arguments:
@@ -92,9 +96,34 @@ models:
                   - on_time
                   - unknown
       - name: order_date_day
+        description: "Date the order was placed — foreign key to dim_date"
         data_tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_date')
                 field: date_day
+      - name: order_purchased_at
+        description: "Timestamp when the order was placed"
+      - name: order_month
+        description: "Truncated to month — used for time series analysis"
+      - name: total_items
+        description: "Number of items in the order"
+      - name: total_items_value
+        description: "Sum of item prices excluding freight"
+      - name: total_freight_value
+        description: "Total freight cost for the order"
+      - name: total_order_value
+        description: "Total items value plus freight"
+      - name: total_payment_value
+        description: "Total amount paid including all payment methods"
+      - name: review_score
+        description: "Customer review score 1-5"
+      - name: actual_delivery_days
+        description: "Days from purchase to delivery"
+      - name: estimated_delivery_days
+        description: "Days from purchase to estimated delivery"
+      - name: delivery_delay_days
+        description: "Positive means late, negative means early"
+      - name: delivery_status
+        description: "on_time if delivered before or on estimated date, late if after"
