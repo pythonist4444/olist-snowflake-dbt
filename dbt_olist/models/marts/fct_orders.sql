@@ -21,6 +21,10 @@ customers as (
     from {{ ref('dim_customers') }}
 ),
 
+dates as (
+    select * from {{ ref('dim_date') }}
+),
+
 final as (
     select
         o.order_id,
@@ -50,6 +54,7 @@ final as (
         o.actual_delivery_days,
         o.estimated_delivery_days,
         o.delivery_delay_days,
+        d.year_month                                as order_year_month,
 
         case
             when o.delivery_delay_days > 0  then 'late'
@@ -62,6 +67,8 @@ final as (
         on o.order_id = oi.order_id
     left join customers c
         on o.customer_id = c.customer_id
+    left join dates d
+        on o.order_purchased_at::date = d.date_day
 )
 
 select * from final

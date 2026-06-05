@@ -27,17 +27,19 @@ sources:
 
 models:
   - name: stg_orders
-    description: "One row per order with cleaned timestamps and status"
+    description: "One row per order. Renames columns to snake_case, casts timestamps using try_to_timestamp, and standardises order status values."
     columns:
       - name: order_id
-        description: "Primary key"
+        description: "Primary key — unique identifier for each order"
         data_tests:
           - not_null
           - unique
       - name: customer_id
+        description: "Foreign key to stg_customers"
         data_tests:
           - not_null
       - name: order_status
+        description: "Current status of the order — delivered, shipped, canceled etc"
         data_tests:
           - not_null
           - accepted_values:
@@ -51,6 +53,16 @@ models:
                   - processing
                   - created
                   - approved
+      - name: order_purchased_at
+        description: "Timestamp when the customer placed the order"
+      - name: order_approved_at
+        description: "Timestamp when payment was approved"
+      - name: order_delivered_carrier_at
+        description: "Timestamp when order was handed to the carrier"
+      - name: order_delivered_customer_at
+        description: "Timestamp when order was delivered to the customer"
+      - name: order_estimated_delivery_at
+        description: "Estimated delivery date shown to customer at purchase"
 
   - name: stg_order_items
     description: "One row per item within an order"
