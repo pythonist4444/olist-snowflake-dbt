@@ -45,7 +45,6 @@ olist-snowflake-dbt/
 ├── great_expectations/           # GE suites and checkpoint for RAW validation
 └── .github/workflows/            # CI — dbt test on PR, dbt build on merge, docs deploy
 
-
 ## Data Model
 
 ### Marts layer
