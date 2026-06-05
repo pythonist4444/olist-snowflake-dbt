@@ -1,0 +1,64 @@
+name: deploy dbt docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'dbt_olist/**'
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dbt
+        run: pip install dbt-snowflake==1.7.0
+
+      - name: Create profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml <<EOF
+          olist_snowflake_dbt:
+            target: prod
+            outputs:
+              prod:
+                type: snowflake
+                account: ${{ secrets.DBT_ACCOUNT }}
+                user: ${{ secrets.DBT_USER }}
+                password: ${{ secrets.DBT_PASSWORD }}
+                role: OLIST_DBT
+                database: ${{ secrets.DBT_DATABASE }}
+                warehouse: ${{ secrets.DBT_WAREHOUSE }}
+                schema: ${{ secrets.DBT_SCHEMA }}
+                threads: 4
+          EOF
+
+      - name: dbt deps
+        working-directory: dbt_olist
+        run: dbt deps
+
+      - name: dbt compile and generate catalog
+        working-directory: dbt_olist
+        run: dbt compile --write-catalog
+
+      - name: Move docs to gh-pages folder
+        run: |
+          mkdir -p gh-pages
+          cp dbt_olist/target/manifest.json gh-pages/
+          cp dbt_olist/target/catalog.json gh-pages/
+          cp dbt_olist/target/index.html gh-pages/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
